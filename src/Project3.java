@@ -1,7 +1,3 @@
-
-import java.util.ArrayList;
-import java.util.List;
-
 /***************************************************************
 * file: Project1.java
 * author: Jacob Buchowiecki
@@ -13,6 +9,8 @@ import java.util.List;
 * purpose: This is the driver program for the project. It begins the window object
 * and does any initial setup that might be needed.
 ****************************************************************/
+import java.util.ArrayList;
+import java.util.List;
 
 public class Project3 {
     //method: main
