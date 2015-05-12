@@ -4,7 +4,7 @@
 * class: CS 445 – Computer Graphics
 *
 * assignment: Program 3
-* date last modified: 4/26/2015
+* date last modified: 5/11/2015
 *
 * purpose: This class contains all of the methods required to construct and show
 * an OpenGL window with the given objects and runtime code.
@@ -18,25 +18,25 @@ import org.lwjgl.util.glu.GLU;
 
 public class WindowContainer {
     
-    private Scene scene;
     private FPCameraController camera;
+    private Chunk chunk;
     
-    private final float MOUSE_SENSITIVITY = 0.09f;
+    private final float MOUSE_SENSITIVITY = .2f;
     private final float MOVEMENT_SPEED = 0.35f;
     
     //method: constructor
     //purpose: Builds this WindowContainer.
-    public WindowContainer(Scene s) {
-        scene = s;
+    public WindowContainer() {
         camera = new FPCameraController(0, 0, 0);
     }
     
     //method: start
-    //purpose: Initializes the display window, OpenGL, camera position and begins rendering.
+    //purpose: Initializes the display window, OpenGL, camera position, generates a chunk and begins rendering.
     public void start() {
         try {
             initUI();
             initGL();
+            generateChunk();
             render();
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,23 +70,34 @@ public class WindowContainer {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         
-        GLU.gluPerspective(100.0f
-                , (float)Display.getDisplayMode().getWidth()/(float)Display.getDisplayMode().getHeight()
-                , 0.1f, 300.0f);
+        GLU.gluPerspective(100.0f, 
+                (float)Display.getDisplayMode().getWidth()/(float)Display.getDisplayMode().getHeight(), 
+                0.1f, 300.0f);
         
         glMatrixMode(GL_MODELVIEW);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+        
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_TEXTURE_2D);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_COLOR_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
+    
+    //method: generateChunk
+    //purpose: Generates a Chunk object. Only to be called after OpenGL is initialized.
+    private void generateChunk() {
+        chunk = new Chunk(0, 0, 0);
     }
     
     //method: processInput
     //purpose: Changes the camera position based on if the user is pressing certain keys.
-    //W moves the camera in the positive Z direction.
-    //S moves the camera in the negative Z direction.
-    //D moves the camera in the positive X direction.
-    //A moves the camera in the negative X direction.
-    //Space moves the camera in the positive Y direction.
-    //Left shift moves the camera in the negative Y direction.
+    //W moves the camera forward.
+    //S moves the camera backward.
+    //D moves the camera right.
+    //A moves the camera left.
+    //Space moves the camera up.
+    //Left shift moves the camera down.
     private void processInput() {
         if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
             camera.moveLeft(MOVEMENT_SPEED);
@@ -122,7 +133,7 @@ public class WindowContainer {
                 glLoadIdentity();
                 camera.lookThrough();
                 
-                scene.drawScene();
+                chunk.render();
                 
                 Display.update();
                 Display.sync(60);
