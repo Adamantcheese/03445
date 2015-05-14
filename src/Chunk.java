@@ -53,7 +53,7 @@ public class Chunk {
     //purpose: Constructs the GL Buffers used to render this chunk.
     private void rebuildMesh() {
         Random rand = new Random();
-        SimplexNoise noise = new SimplexNoise(CHUNK_SIZE, rand.nextDouble(), rand.nextInt());
+        SimplexNoise noise = new SimplexNoise(CHUNK_SIZE, 0.03, rand.nextInt());
         VBOVertexHandle = glGenBuffers();
         VBOColorHandle = glGenBuffers();
         VBOTextureHandle = glGenBuffers();
