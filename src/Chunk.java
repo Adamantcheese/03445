@@ -28,12 +28,12 @@ public class Chunk {
     private int VBOColorHandle;
     private int VBOTextureHandle;
     
-    //private Texture texture;
+    private Texture texture;
     
     private int startX;
     private int startY;
     private int startZ;
-    
+
     //method: render
     //purpose: Renders this chunk using GL Buffers.
     public void render() {
@@ -66,12 +66,11 @@ public class Chunk {
                     vertexPositionData.put(createCube((float) (startX + x*Block.BLOCK_LENGTH), 
                             (float) (y*Block.BLOCK_LENGTH + (int) (CHUNK_SIZE*.8)), 
                             (float) (startZ + z*Block.BLOCK_LENGTH)));
-                    vertexColorData.put(createCubeVertexCol(CUBE_COLOR));
-                    //vertexTextureData.put(createTexCube((float) 0, (float) 0, blocks[(int) x][(int) y][(int) z]));
+                    vertexColorData.put(createCubeVertexCol(getCubeColor(blocks[(int)x][(int)y][(int)z])));                   
+                    vertexTextureData.put(createTexCube((float) 0, (float) 0, blocks[(int) x][(int) y][(int) z]));
                 }
             }
         }
-        
         vertexPositionData.flip();
         vertexColorData.flip();
         vertexTextureData.flip();
@@ -88,7 +87,52 @@ public class Chunk {
         glBufferData(GL_ARRAY_BUFFER, vertexTextureData, GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
-    
+    public static float[] createTexCube(float x,float y, Block b){
+        float offset = (1024f/16)/1024;
+        //System.out.println(b.getID());
+        //How???
+        //switch (b.getID()) {
+            //case 1:
+                return new float[] {
+                // BOTTOM QUAD(DOWN=+Y)
+                x + offset*3, y + offset*10,
+                x + offset*2, y + offset*10,
+                x + offset*2, y + offset*9,
+                x + offset*3, y + offset*9,
+                // TOP!
+                x + offset*3, y + offset*1,
+                x + offset*2, y + offset*1,
+                x + offset*2, y + offset*0,
+                x + offset*3, y + offset*0,
+                // FRONT QUAD
+                x + offset*3, y + offset*0,
+                x + offset*4, y + offset*0,
+                x + offset*4, y + offset*1,
+                x + offset*3, y + offset*1,
+                // BACK QUAD
+                x + offset*4, y + offset*1,
+                x + offset*3, y + offset*1,
+                x + offset*3, y + offset*0,
+                x + offset*4, y + offset*0,
+                // LEFT QUAD
+                x + offset*3, y + offset*0,
+                x + offset*4, y + offset*0,
+                x + offset*4, y + offset*1,
+                x + offset*3, y + offset*1,
+                // RIGHT QUAD
+                x + offset*3, y + offset*0,
+                x + offset*4, y + offset*0,
+                x + offset*4, y + offset*1,
+                x + offset*3, y + offset*1};
+        
+       // }
+        
+    }
+    //method: getCubeColor
+    //purpose: returns cube color
+    private float[] getCubeColor(Block block) {
+        return new float[] { 1, 1, 1 };  
+    }
     //method: createCubeVertexCol
     //purpose: Creates an array of cube colors for the given column in the chunk.
     private float[] createCubeVertexCol(float[] cubeColorArray) {
@@ -145,6 +189,12 @@ public class Chunk {
         this.startY = startY;
         this.startZ = startZ;
         
+        try{
+            texture = TextureLoader.getTexture("PNG",ResourceLoader.getResourceAsStream("textures.png"));
+        }catch(Exception e){
+            System.out.print("MY MIND IS THE INTERNET. I KNOW EVERY CONTINUITY MISTAKE"
+                                + "EVER MADE ON TELEVISION.");
+        }
         Random r = new Random();
         blocks = new Block[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
         for (int x = 0; x < CHUNK_SIZE; x++) {
