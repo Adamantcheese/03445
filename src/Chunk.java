@@ -21,6 +21,7 @@ public class Chunk {
     static final int CHUNK_SIZE = 30;
     static final float[] CUBE_COLOR = {1, 1, 1};
     static final int TEXTURE_SIZE = 64;
+    static final int MIN_HEIGHT = 5;
     
     private Block[][][] blocks;
     
@@ -68,7 +69,15 @@ public class Chunk {
                 int k = (int) (startZ + z * Block.BLOCK_LENGTH);
                 int maxHeight = (startY + (int)
                         (100 * noise.getNoise(i, k)));
-                for(float y = 0; y <= maxHeight; y++) {
+                for (float y = 0; y < MIN_HEIGHT; y++) {
+                    vertexPositionData.put(createCube(
+                            (float) (startX + x*Block.BLOCK_LENGTH), 
+                            (float) (y*Block.BLOCK_LENGTH + (int) (CHUNK_SIZE*.8)), 
+                            (float) (startZ + z*Block.BLOCK_LENGTH)));
+                    vertexColorData.put(createCubeVertexCol(CUBE_COLOR));
+                }
+                
+                for(float y = MIN_HEIGHT; y <= maxHeight + MIN_HEIGHT; y++) {
                     vertexPositionData.put(createCube(
                             (float) (startX + x*Block.BLOCK_LENGTH), 
                             (float) (y*Block.BLOCK_LENGTH + (int) (CHUNK_SIZE*.8)), 
