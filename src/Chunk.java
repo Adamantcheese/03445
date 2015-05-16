@@ -304,7 +304,7 @@ public class Chunk {
                 x + offset*4, y + offset*1,
                 x + offset*3, y + offset*1};
             default:
-                //default currently set to grass
+                //default currently set to ERROR
                 return new float[]{
                 // BOTTOM QUAD(DOWN=+Y)
                 x + offset*1, y + offset*3,
