@@ -307,35 +307,35 @@ public class Chunk {
                 //default currently set to grass
                 return new float[]{
                 // BOTTOM QUAD(DOWN=+Y)
-                x + offset*3, y + offset*1,
-                x + offset*2, y + offset*1,
-                x + offset*2, y + offset*0,
-                x + offset*3, y + offset*0,
+                x + offset*1, y + offset*3,
+                x + offset*0, y + offset*3,
+                x + offset*0, y + offset*2,
+                x + offset*1, y + offset*2,
                 // TOP! still needs to be just green
-                x + offset*0, y + offset*1,
-                x + offset*1, y + offset*1,
-                x + offset*1, y + offset*0,
-                x + offset*0, y + offset*0,
+                x + offset*0, y + offset*3,
+                x + offset*1, y + offset*3,
+                x + offset*1, y + offset*2,
+                x + offset*0, y + offset*2,
                 // FRONT QUAD
-                x + offset*2, y + offset*1,
-                x + offset*1, y + offset*1,
-                x + offset*1, y + offset*0,
-                x + offset*2, y + offset*0,
+                x + offset*1, y + offset*3,
+                x + offset*0, y + offset*3,
+                x + offset*0, y + offset*2,
+                x + offset*1, y + offset*2,
                 // BACK QUAD
-                x + offset*2, y + offset*0,
-                x + offset*1, y + offset*0,
-                x + offset*1, y + offset*1,
-                x + offset*2, y + offset*1,
+                x + offset*1, y + offset*2,
+                x + offset*0, y + offset*2,
+                x + offset*0, y + offset*3,
+                x + offset*1, y + offset*3,
                 // LEFT QUAD
-                x + offset*2, y + offset*1,
-                x + offset*1, y + offset*1,
-                x + offset*1, y + offset*0,
-                x + offset*2, y + offset*0,
+                x + offset*1, y + offset*3,
+                x + offset*0, y + offset*3,
+                x + offset*0, y + offset*2,
+                x + offset*1, y + offset*2,
                 // RIGHT QUAD
-                x + offset*2, y + offset*1,
-                x + offset*1, y + offset*1,
-                x + offset*1, y + offset*0,
-                x + offset*2, y + offset*0};
+                x + offset*1, y + offset*3,
+                x + offset*0, y + offset*3,
+                x + offset*0, y + offset*2,
+                x + offset*1, y + offset*2};
         
         }
         
