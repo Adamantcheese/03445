@@ -88,9 +88,23 @@ public class Chunk {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
     public static float[] createTexCube(float x,float y, Block b){
-        float offset = (1024f/16)/1024;
+        float offset = (256f/4)/256;
         //System.out.println(b.getID());
         //How???
+        
+        //Get the ID by calling b.getID();
+        //You can see what types there are in the block class, so compare to those
+        // i.e. BlockType_Grass or BlockType_Stone
+        //Once we know the blocktype, return a float array of stuff. works like this:
+        // x + offset * COLUMN, y + offset * ROW
+        // x + offset * (COLUMN - 1), y + offset * ROW
+        // x + offset * (COLUMN - 1), y + offset * (ROW - 1)
+        // x + offset * COLUMN, y + offset * (ROW - 1)
+        
+        //Do that for each of the faces, where COLUMN is the column of the texture you want and ROW is the row of the texture you want
+        
+        //Then do that for each of the block types, and everything should work fine
+        
         //switch (b.getID()) {
             //case 1:
                 return new float[] {
@@ -195,6 +209,7 @@ public class Chunk {
             System.out.print("MY MIND IS THE INTERNET. I KNOW EVERY CONTINUITY MISTAKE"
                                 + "EVER MADE ON TELEVISION.");
         }
+        
         Random r = new Random();
         blocks = new Block[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
         for (int x = 0; x < CHUNK_SIZE; x++) {
