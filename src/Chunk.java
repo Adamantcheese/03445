@@ -53,7 +53,8 @@ public class Chunk {
     //purpose: Constructs the GL Buffers used to render this chunk.
     private void rebuildMesh() {
         Random rand = new Random();
-        SimplexNoise noise = new SimplexNoise(CHUNK_SIZE, 0.03, rand.nextInt());
+        SimplexNoise noise = new SimplexNoise(CHUNK_SIZE, 0.04, rand.nextInt());
+        
         VBOVertexHandle = glGenBuffers();
         VBOColorHandle = glGenBuffers();
         VBOTextureHandle = glGenBuffers();
@@ -66,14 +67,15 @@ public class Chunk {
             for(float z = 0; z < CHUNK_SIZE; z++) {
                 int i = (int) (startX + x * Block.BLOCK_LENGTH);
                 int k = (int) (startZ + z * Block.BLOCK_LENGTH);
-                int maxHeight = (startY + (int)
-                        (100 * noise.getNoise(i, k)));
+                int maxHeight = (startY + (int) (100 * noise.getNoise(i, k)));
+                
                 for (float y = 0; y < MIN_HEIGHT; y++) {
                     vertexPositionData.put(createCube(
                             (float) (startX + x*Block.BLOCK_LENGTH), 
                             (float) (y*Block.BLOCK_LENGTH + (int) (CHUNK_SIZE*.8)), 
                             (float) (startZ + z*Block.BLOCK_LENGTH)));
-                    vertexColorData.put(createCubeVertexCol(CUBE_COLOR));
+                    vertexColorData.put(createCubeVertexCol());
+                    vertexTextureData.put(createTexCube((float) 0, (float) 0, blocks[(int) x][(int) y][(int) z]));
                 }
                 
                 for(float y = MIN_HEIGHT; y <= maxHeight + MIN_HEIGHT; y++) {
