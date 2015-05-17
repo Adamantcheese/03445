@@ -20,6 +20,7 @@ import org.newdawn.slick.util.ResourceLoader;
 public class Chunk {
     static final int CHUNK_SIZE = 30;
     static final int TEXTURE_SIZE = 64;
+    static final int MIN_HEIGHT = 5;
     
     private Block[][][] blocks;
     
@@ -51,6 +52,8 @@ public class Chunk {
     //method: rebuildMesh
     //purpose: Constructs the GL Buffers used to render this chunk.
     private void rebuildMesh() {
+        Random rand = new Random();
+        SimplexNoise noise = new SimplexNoise(CHUNK_SIZE, 0.03, rand.nextInt());
         VBOVertexHandle = glGenBuffers();
         VBOColorHandle = glGenBuffers();
         VBOTextureHandle = glGenBuffers();
@@ -61,8 +64,21 @@ public class Chunk {
         
         for(float x = 0; x < CHUNK_SIZE; x++) {
             for(float z = 0; z < CHUNK_SIZE; z++) {
-                for(float y = 0; y < CHUNK_SIZE; y++) {
-                    vertexPositionData.put(createCube((float) (startX + x*Block.BLOCK_LENGTH), 
+                int i = (int) (startX + x * Block.BLOCK_LENGTH);
+                int k = (int) (startZ + z * Block.BLOCK_LENGTH);
+                int maxHeight = (startY + (int)
+                        (100 * noise.getNoise(i, k)));
+                for (float y = 0; y < MIN_HEIGHT; y++) {
+                    vertexPositionData.put(createCube(
+                            (float) (startX + x*Block.BLOCK_LENGTH), 
+                            (float) (y*Block.BLOCK_LENGTH + (int) (CHUNK_SIZE*.8)), 
+                            (float) (startZ + z*Block.BLOCK_LENGTH)));
+                    vertexColorData.put(createCubeVertexCol(CUBE_COLOR));
+                }
+                
+                for(float y = MIN_HEIGHT; y <= maxHeight + MIN_HEIGHT; y++) {
+                    vertexPositionData.put(createCube(
+                            (float) (startX + x*Block.BLOCK_LENGTH), 
                             (float) (y*Block.BLOCK_LENGTH + (int) (CHUNK_SIZE*.8)), 
                             (float) (startZ + z*Block.BLOCK_LENGTH)));
                     vertexColorData.put(createCubeVertexCol());                   
