@@ -77,7 +77,6 @@ public class WindowContainer {
         
         glMatrixMode(GL_MODELVIEW);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-        glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
         
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);

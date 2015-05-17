@@ -410,6 +410,7 @@ public class Chunk {
         
         try{
             texture = TextureLoader.getTexture("PNG",ResourceLoader.getResourceAsStream("textures.png"));
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
         }catch(Exception e){
             System.out.print("MY MIND IS THE INTERNET. I KNOW EVERY CONTINUITY MISTAKE"
                                 + "EVER MADE ON TELEVISION.");
