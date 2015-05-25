@@ -4,7 +4,7 @@
 * class: CS 445 – Computer Graphics
 *
 * assignment: Program 3
-* date last modified: 5/11/2015
+* date last modified: 5/24/2015
 *
 * purpose: This class contains all of the methods required to construct and show
 * an OpenGL window with the given objects and runtime code.

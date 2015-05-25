@@ -4,7 +4,7 @@
 * class: CS 445 – Computer Graphics
 *
 * assignment: Program 3
-* date last modified: 4/26/2015
+* date last modified: 5/24/2015
 *
 * purpose: An implementation of a camera object for OpenGL.
 ****************************************************************/
@@ -25,7 +25,7 @@ public class FPCameraController {
     public FPCameraController(float x, float y, float z) {
         position = new Vector3f(x, y, z);
         lPosition = new Vector3f(x, y + 15f, z);
-        yaw = 0.0f;
+        yaw = 135.0f;
         pitch = 0.0f;
     }
     

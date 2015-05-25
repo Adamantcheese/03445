@@ -4,7 +4,7 @@
 * class: CS 445 – Computer Graphics
 *
 * assignment: Program 3
-* date last modified: 5/16/2015
+* date last modified: 5/24/2015
 *
 * purpose: This class implements a chunk containing multiple blocks.
 ****************************************************************/
@@ -72,7 +72,7 @@ public class Chunk {
                 for (float y = 0; y < MIN_HEIGHT; y++) {
                     vertexPositionData.put(createCube(
                             (float) (startX + x*Block.BLOCK_LENGTH), 
-                            (float) (y*Block.BLOCK_LENGTH + (int) (CHUNK_SIZE*.8)), 
+                            (float) (y*Block.BLOCK_LENGTH - CHUNK_SIZE), 
                             (float) (startZ + z*Block.BLOCK_LENGTH)));
                     vertexColorData.put(createCubeVertexCol());
                     vertexTextureData.put(createTexCube((float) 0, (float) 0, blocks[(int) x][(int) y][(int) z]));
@@ -81,7 +81,7 @@ public class Chunk {
                 for(float y = MIN_HEIGHT; y <= maxHeight + MIN_HEIGHT; y++) {
                     vertexPositionData.put(createCube(
                             (float) (startX + x*Block.BLOCK_LENGTH), 
-                            (float) (y*Block.BLOCK_LENGTH + (int) (CHUNK_SIZE*.8)), 
+                            (float) (y*Block.BLOCK_LENGTH - CHUNK_SIZE), 
                             (float) (startZ + z*Block.BLOCK_LENGTH)));
                     vertexColorData.put(createCubeVertexCol());                   
                     vertexTextureData.put(createTexCube((float) 0, (float) 0, blocks[(int) x][(int) y][(int) z]));
