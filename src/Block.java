@@ -4,7 +4,7 @@
 * class: CS 445 – Computer Graphics
 *
 * assignment: Program 3
-* date last modified: 5/11/2015
+* date last modified: 5/28/2015
 *
 * purpose: This class implements a specific type of block.
 ****************************************************************/
@@ -44,7 +44,11 @@ public class Block {
     //purpose: Sets up this block for rendering later with a given corner and side length.
     public Block (BlockType t) {
         type = t;
-        isActive = true;
+        if(t == BlockType.BlockType_Default) {
+            isActive = false;
+        } else {
+            isActive = true;
+        }
     }
     
     //method: isActive

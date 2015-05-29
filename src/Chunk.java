@@ -4,7 +4,7 @@
 * class: CS 445 – Computer Graphics
 *
 * assignment: Program 3
-* date last modified: 5/24/2015
+* date last modified: 5/28/2015
 *
 * purpose: This class implements a chunk containing multiple blocks.
 ****************************************************************/
@@ -418,36 +418,100 @@ public class Chunk {
             System.out.print("MY MIND IS THE INTERNET. I KNOW EVERY CONTINUITY MISTAKE"
                                 + "EVER MADE ON TELEVISION.");
         }
+        
         blocks = new Block[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
+        
+        //<editor-fold desc="Terrain Generation">
         for (int x = 0; x < CHUNK_SIZE; x++) {
             for (int y = 0; y < CHUNK_SIZE; y++) {
                 for (int z = 0; z < CHUNK_SIZE; z++) {
-                    switch (rand.nextInt(Integer.MAX_VALUE) % 6) {
-                        case 0:
-                            blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
-                            break;
-                        case 1:
-                            blocks[x][y][z] = new Block(Block.BlockType.BlockType_Sand);
-                            break;
-                        case 2:
+                    //Get the max height for this column
+                    int i = (int) (startX + x * BLOCK_LENGTH);
+                    int k = (int) (startZ + z * BLOCK_LENGTH);
+                    int maxHeight = (startY + (int) (100 * noise.getNoise(i, k)));
+                    
+                    //Default the block to be a default block; it shouldn't be rendered anyways
+                    blocks[x][y][z] = new Block(Block.BlockType.BlockType_Default);
+                    
+                    //Fill in according to the following rules:
+                    //1) Bottom is bedrock.
+                    //2) Anything between bedrock and the topmost block is stone.
+                    //3) Dirt and grass are chosen randomly between the two.
+                    if(y == 0) {
+                        blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
+                    } else if (y < MIN_HEIGHT) {
+                        //default to stone
+                        blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
+                        //if there's no more blocks above the stone stack this makes, set it to be water
+                        if(maxHeight < 0 && y + 1 == MIN_HEIGHT) {
                             blocks[x][y][z] = new Block(Block.BlockType.BlockType_Water);
-                            break;
-                        case 3:
-                            blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
-                            break;
-                        case 4:
-                            blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
-                            break;
-                        case 5:
-                            blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
-                            break;
-                        default:
-                            blocks[x][y][z] = new Block(Block.BlockType.BlockType_Default);
-                            break;
+                        }
+                    } else if (y < MIN_HEIGHT + maxHeight) {
+                        blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
+                    } else {
+                        if(maxHeight == 0) {
+                            blocks[x][y][z] = new Block(Block.BlockType.BlockType_Sand);
+                        } else {
+                            switch(rand.nextInt(4)) {
+                                case 0:
+                                case 1:
+                                case 2:
+                                    blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
+                                    break;
+                                case 3:
+                                    blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
+                                    break;
+                            }
+                        }
+                    }
+                    
+                    //Disable blocks above the maximum height
+                    if(y > MIN_HEIGHT + maxHeight) {
+                        blocks[x][y][z].setActive(false);
                     }
                 }
             }
         }
+        
+        //Do some post-generation according to the following rules:
+        //1) Grass blocks have two dirt pieces below them, as do dirt
+        //2) Sand blocks have two sand below them
+        //3) Water blocks have a sand block below them
+        for(int x = 0; x < CHUNK_SIZE; x++) {
+            for(int z = 0; z < CHUNK_SIZE; z++) {
+                for(int y = 0; y < CHUNK_SIZE; y++) {
+                    boolean done = false;
+                    if(!blocks[x][y][z].isActive()) {
+                        break;
+                    }
+                    switch(blocks[x][y][z].getID()) {
+                        case 3:
+                        case 0:
+                            //grass, add two dirt
+                            blocks[x][y-1][z] = new Block(Block.BlockType.BlockType_Dirt);
+                            blocks[x][y-2][z] = new Block(Block.BlockType.BlockType_Dirt);
+                            done = true;
+                            break;
+                        case 1:
+                            //sand, add sand pieces
+                            blocks[x][y-1][z] = new Block(Block.BlockType.BlockType_Sand);
+                            blocks[x][y-2][z] = new Block(Block.BlockType.BlockType_Sand);
+                            done = true;
+                            break;
+                        case 2:
+                            //water, add sand piece
+                            blocks[x][y-1][z] = new Block(Block.BlockType.BlockType_Sand);
+                        default:
+                            break;
+                    }
+                    if(done) {
+                        break;
+                    }
+                }
+            }
+        }
+        //</editor-fold>
+        
         VBOColorHandle = glGenBuffers();
         VBOVertexHandle = glGenBuffers();
         VBOTextureHandle = glGenBuffers();

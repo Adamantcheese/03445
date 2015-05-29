@@ -4,7 +4,7 @@
 * class: CS 445 – Computer Graphics
 *
 * assignment: Program 3
-* date last modified: 5/24/2015
+* date last modified: 5/28/2015
 *
 * purpose: This class contains all of the methods required to construct and show
 * an OpenGL window with the given objects and runtime code.
@@ -31,9 +31,9 @@ public class WindowContainer {
     private FloatBuffer whiteLight;
     
     //method: constructor
-    //purpose: Builds this WindowContainer.
+    //purpose: Makes an object, uninitialized. Call start() to create the window and set everything up.
     public WindowContainer() {
-        camera = new FPCameraController(0, 0, 0);
+        
     }
     
     //method: start
@@ -42,7 +42,8 @@ public class WindowContainer {
         try {
             initUI();
             initGL();
-            generateChunk();
+            camera = new FPCameraController(0, 0, 0);
+            chunk = new Chunk(0, 0, 0);
             render();
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,12 +97,6 @@ public class WindowContainer {
         glLight(GL_LIGHT0, GL_AMBIENT, whiteLight);//sets our ambient light
         glEnable(GL_LIGHTING);//enables our lighting
         glEnable(GL_LIGHT0);//enables light0
-    }
-    
-    //method: generateChunk
-    //purpose: Generates a Chunk object. Only to be called after OpenGL is initialized.
-    private void generateChunk() {
-        chunk = new Chunk(0, 0, 0);
     }
     
     private void initLightArrays() {
