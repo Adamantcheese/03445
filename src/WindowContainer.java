@@ -22,7 +22,11 @@ import org.lwjgl.BufferUtils;
 public class WindowContainer {
     
     private FPCameraController camera;
-    private Chunk chunk;
+    
+    private Chunk chunk0;
+    private Chunk chunk1;
+    private Chunk chunk2;
+    private Chunk chunk3;
     
     private final float MOUSE_SENSITIVITY = .2f;
     private final float MOVEMENT_SPEED = 0.75f;
@@ -40,7 +44,12 @@ public class WindowContainer {
             initUI();
             initGL();
             camera = new FPCameraController(0, 0, 0);
-            chunk = new Chunk(0, 0, 0);
+            
+            chunk0 = new Chunk(0, 0, 0);
+            chunk1 = new Chunk(Chunk.CHUNK_SIZE, 0, 0);
+            chunk2 = new Chunk(0, 0, Chunk.CHUNK_SIZE);
+            chunk3 = new Chunk(Chunk.CHUNK_SIZE, 0, Chunk.CHUNK_SIZE);
+            
             render();
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,7 +148,10 @@ public class WindowContainer {
                 glLoadIdentity();
                 camera.lookThrough();
                 
-                chunk.render();
+                chunk0.render();
+                chunk1.render();
+                chunk2.render();
+                chunk3.render();
                 
                 Display.update();
                 Display.sync(60);

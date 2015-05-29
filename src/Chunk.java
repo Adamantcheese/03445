@@ -435,7 +435,6 @@ public class Chunk {
                     //Fill in according to the following rules:
                     //1) Bottom is bedrock.
                     //2) Anything between bedrock and the topmost block is stone.
-                    //3) Dirt and grass are chosen randomly between the two.
                     if(y == 0) {
                         blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
                     } else if (y < MIN_HEIGHT) {
@@ -451,16 +450,7 @@ public class Chunk {
                         if(maxHeight == 0) {
                             blocks[x][y][z] = new Block(Block.BlockType.BlockType_Sand);
                         } else {
-                            switch(rand.nextInt(4)) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                    blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
-                                    break;
-                                case 3:
-                                    blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
-                                    break;
-                            }
+                            blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
                         }
                     }
                     
@@ -473,7 +463,7 @@ public class Chunk {
         }
         
         //Do some post-generation according to the following rules:
-        //1) Grass blocks have two dirt pieces below them, as do dirt
+        //1) Grass blocks have two dirt pieces below them
         //2) Sand blocks have two sand below them
         //3) Water blocks have a sand block below them
         for(int x = 0; x < CHUNK_SIZE; x++) {
@@ -484,7 +474,6 @@ public class Chunk {
                         break;
                     }
                     switch(blocks[x][y][z].getID()) {
-                        case 3:
                         case 0:
                             //grass, add two dirt
                             blocks[x][y-1][z] = new Block(Block.BlockType.BlockType_Dirt);
