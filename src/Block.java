@@ -11,8 +11,6 @@
 import static org.lwjgl.opengl.GL11.*;
 
 public class Block {
-    static final int BLOCK_LENGTH = 2;
-    
     private boolean isActive;
     private BlockType type;
     

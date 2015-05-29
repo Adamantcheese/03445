@@ -21,6 +21,7 @@ public class Chunk {
     static final int CHUNK_SIZE = 30;
     static final int TEXTURE_SIZE = 64;
     static final int MIN_HEIGHT = 5;
+    static final int BLOCK_LENGTH = 2;
     
     private Block[][][] blocks;
     
@@ -33,6 +34,9 @@ public class Chunk {
     private int startX;
     private int startY;
     private int startZ;
+    
+    private Random rand;
+    private SimplexNoise noise;
 
     //method: render
     //purpose: Renders this chunk using GL Buffers.
@@ -52,9 +56,6 @@ public class Chunk {
     //method: rebuildMesh
     //purpose: Constructs the GL Buffers used to render this chunk.
     private void rebuildMesh() {
-        Random rand = new Random();
-        SimplexNoise noise = new SimplexNoise(CHUNK_SIZE, 0.04, rand.nextInt());
-        
         VBOVertexHandle = glGenBuffers();
         VBOColorHandle = glGenBuffers();
         VBOTextureHandle = glGenBuffers();
@@ -65,24 +66,24 @@ public class Chunk {
         
         for(float x = 0; x < CHUNK_SIZE; x++) {
             for(float z = 0; z < CHUNK_SIZE; z++) {
-                int i = (int) (startX + x * Block.BLOCK_LENGTH);
-                int k = (int) (startZ + z * Block.BLOCK_LENGTH);
+                int i = (int) (startX + x * BLOCK_LENGTH);
+                int k = (int) (startZ + z * BLOCK_LENGTH);
                 int maxHeight = (startY + (int) (100 * noise.getNoise(i, k)));
                 
                 for (float y = 0; y < MIN_HEIGHT; y++) {
                     vertexPositionData.put(createCube(
-                            (float) (startX + x*Block.BLOCK_LENGTH), 
-                            (float) (y*Block.BLOCK_LENGTH - CHUNK_SIZE), 
-                            (float) (startZ + z*Block.BLOCK_LENGTH)));
+                            (float) (startX + x*BLOCK_LENGTH), 
+                            (float) (y*BLOCK_LENGTH - CHUNK_SIZE), 
+                            (float) (startZ + z*BLOCK_LENGTH)));
                     vertexColorData.put(createCubeVertexCol());
                     vertexTextureData.put(createTexCube((float) 0, (float) 0, blocks[(int) x][(int) y][(int) z]));
                 }
                 
                 for(float y = MIN_HEIGHT; y <= maxHeight + MIN_HEIGHT; y++) {
                     vertexPositionData.put(createCube(
-                            (float) (startX + x*Block.BLOCK_LENGTH), 
-                            (float) (y*Block.BLOCK_LENGTH - CHUNK_SIZE), 
-                            (float) (startZ + z*Block.BLOCK_LENGTH)));
+                            (float) (startX + x*BLOCK_LENGTH), 
+                            (float) (y*BLOCK_LENGTH - CHUNK_SIZE), 
+                            (float) (startZ + z*BLOCK_LENGTH)));
                     vertexColorData.put(createCubeVertexCol());                   
                     vertexTextureData.put(createTexCube((float) 0, (float) 0, blocks[(int) x][(int) y][(int) z]));
                 }
@@ -250,36 +251,35 @@ public class Chunk {
                 //stone texture
                 return new float[]{
                     // BOTTOM QUAD(DOWN=+Y)
-                    //sand texture
-                    x + offset * 3, y + offset * 10,
-                    x + offset * 2, y + offset * 10,
-                    x + offset * 2, y + offset * 9,
-                    x + offset * 3, y + offset * 9,
+                    x + offset * 3, y + offset * 2,
+                    x + offset * 2, y + offset * 2,
+                    x + offset * 2, y + offset * 1,
+                    x + offset * 3, y + offset * 1,
                     // TOP!
-                    x + offset * 3, y + offset * 10,
-                    x + offset * 2, y + offset * 10,
-                    x + offset * 2, y + offset * 9,
-                    x + offset * 3, y + offset * 9,
+                    x + offset * 3, y + offset * 2,
+                    x + offset * 2, y + offset * 2,
+                    x + offset * 2, y + offset * 1,
+                    x + offset * 3, y + offset * 1,
                     // FRONT QUAD
-                    x + offset * 3, y + offset * 10,
-                    x + offset * 2, y + offset * 10,
-                    x + offset * 2, y + offset * 9,
-                    x + offset * 3, y + offset * 9,
+                    x + offset * 3, y + offset * 2,
+                    x + offset * 2, y + offset * 2,
+                    x + offset * 2, y + offset * 1,
+                    x + offset * 3, y + offset * 1,
                     // BACK QUAD
-                    x + offset * 3, y + offset * 10,
-                    x + offset * 2, y + offset * 10,
-                    x + offset * 2, y + offset * 9,
-                    x + offset * 3, y + offset * 9,
+                    x + offset * 3, y + offset * 2,
+                    x + offset * 2, y + offset * 2,
+                    x + offset * 2, y + offset * 1,
+                    x + offset * 3, y + offset * 1,
                     // LEFT QUAD
-                    x + offset * 3, y + offset * 10,
-                    x + offset * 2, y + offset * 10,
-                    x + offset * 2, y + offset * 9,
-                    x + offset * 3, y + offset * 9,
+                    x + offset * 3, y + offset * 2,
+                    x + offset * 2, y + offset * 2,
+                    x + offset * 2, y + offset * 1,
+                    x + offset * 3, y + offset * 1,
                     // RIGHT QUAD
-                    x + offset * 3, y + offset * 10,
-                    x + offset * 2, y + offset * 10,
-                    x + offset * 2, y + offset * 9,
-                    x + offset * 3, y + offset * 9};
+                    x + offset * 3, y + offset * 2,
+                    x + offset * 2, y + offset * 2,
+                    x + offset * 2, y + offset * 1,
+                    x + offset * 3, y + offset * 1};
 
             case 5:
                 //bedrock texture
@@ -366,37 +366,37 @@ public class Chunk {
     //purpose: Creates a cube at the given corner point and returns it as a float array.
     //The float array is a multiple of 4 so that GL_QUADS may be drawn.
     public static float[] createCube(float x, float y, float z) {
-        int offset = Block.BLOCK_LENGTH/2;
+        int offset = BLOCK_LENGTH/2;
         return new float[] {
             // TOP QUAD
             x + offset, y + offset, z,
             x - offset, y + offset, z,
-            x - offset, y + offset, z - Block.BLOCK_LENGTH,
-            x + offset, y + offset, z - Block.BLOCK_LENGTH,
+            x - offset, y + offset, z - BLOCK_LENGTH,
+            x + offset, y + offset, z - BLOCK_LENGTH,
             // BOTTOM QUAD
-            x + offset, y - offset, z - Block.BLOCK_LENGTH, 
-            x - offset, y - offset, z - Block.BLOCK_LENGTH,
+            x + offset, y - offset, z - BLOCK_LENGTH, 
+            x - offset, y - offset, z - BLOCK_LENGTH,
             x - offset, y - offset, z,
             x + offset, y - offset, z,
             // FRONT QUAD
-            x + offset, y + offset, z - Block.BLOCK_LENGTH, 
-            x - offset, y + offset, z - Block.BLOCK_LENGTH, 
-            x - offset, y - offset, z - Block.BLOCK_LENGTH,
-            x + offset, y - offset, z - Block.BLOCK_LENGTH,
+            x + offset, y + offset, z - BLOCK_LENGTH, 
+            x - offset, y + offset, z - BLOCK_LENGTH, 
+            x - offset, y - offset, z - BLOCK_LENGTH,
+            x + offset, y - offset, z - BLOCK_LENGTH,
             // BACK QUAD
             x + offset, y - offset, z, 
             x - offset, y - offset, z,
             x - offset, y + offset, z,
             x + offset, y + offset, z,
             // LEFT QUAD
-            x - offset, y + offset, z - Block.BLOCK_LENGTH, 
+            x - offset, y + offset, z - BLOCK_LENGTH, 
             x - offset, y + offset, z, 
             x - offset, y - offset, z, 
-            x - offset, y - offset, z - Block.BLOCK_LENGTH,
+            x - offset, y - offset, z - BLOCK_LENGTH,
             // RIGHT QUAD
             x + offset, y + offset, z, 
-            x + offset, y + offset, z - Block.BLOCK_LENGTH, 
-            x + offset, y - offset, z - Block.BLOCK_LENGTH,
+            x + offset, y + offset, z - BLOCK_LENGTH, 
+            x + offset, y - offset, z - BLOCK_LENGTH,
             x + offset, y - offset, z
         };
     }
@@ -408,20 +408,21 @@ public class Chunk {
         this.startY = startY;
         this.startZ = startZ;
         
-        try{
+        rand = new Random();
+        noise = new SimplexNoise(CHUNK_SIZE, 0.04, rand.nextInt());
+        
+        try {
             texture = TextureLoader.getTexture("PNG",ResourceLoader.getResourceAsStream("textures.png"));
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
-        }catch(Exception e){
+        } catch(Exception e) {
             System.out.print("MY MIND IS THE INTERNET. I KNOW EVERY CONTINUITY MISTAKE"
                                 + "EVER MADE ON TELEVISION.");
         }
-        //added randomization for all types of textures
-        Random r = new Random();
         blocks = new Block[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
         for (int x = 0; x < CHUNK_SIZE; x++) {
             for (int y = 0; y < CHUNK_SIZE; y++) {
                 for (int z = 0; z < CHUNK_SIZE; z++) {
-                    switch (r.nextInt(Integer.MAX_VALUE) % 6) {
+                    switch (rand.nextInt(Integer.MAX_VALUE) % 6) {
                         case 0:
                             blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
                             break;
