@@ -19,7 +19,6 @@ import org.newdawn.slick.util.ResourceLoader;
 
 public class Chunk {
     static final int CHUNK_SIZE = 30;
-    static final int TEXTURE_SIZE = 64;
     static final int MIN_HEIGHT = 5;
     static final int BLOCK_LENGTH = 2;
     
@@ -511,10 +510,6 @@ public class Chunk {
             }
         }
         //</editor-fold>
-        
-        VBOColorHandle = glGenBuffers();
-        VBOVertexHandle = glGenBuffers();
-        VBOTextureHandle = glGenBuffers();
         
         rebuildMesh();
     }

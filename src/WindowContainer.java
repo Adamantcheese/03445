@@ -25,10 +25,7 @@ public class WindowContainer {
     private Chunk chunk;
     
     private final float MOUSE_SENSITIVITY = .2f;
-    private final float MOVEMENT_SPEED = 0.35f;
-    
-    private FloatBuffer lightPosition;
-    private FloatBuffer whiteLight;
+    private final float MOVEMENT_SPEED = 0.75f;
     
     //method: constructor
     //purpose: Makes an object, uninitialized. Call start() to create the window and set everything up.
@@ -90,20 +87,13 @@ public class WindowContainer {
         glEnableClientState(GL_COLOR_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         
-        initLightArrays();
-        glLight(GL_LIGHT0, GL_POSITION, lightPosition); //sets our light’s position
+        FloatBuffer whiteLight= BufferUtils.createFloatBuffer(4);
+        whiteLight.put(1.0f).put(1.0f).put(1.0f).put(0.0f).flip();
         glLight(GL_LIGHT0, GL_SPECULAR, whiteLight);//sets our specular light
         glLight(GL_LIGHT0, GL_DIFFUSE, whiteLight);//sets our diffuse light
         glLight(GL_LIGHT0, GL_AMBIENT, whiteLight);//sets our ambient light
         glEnable(GL_LIGHTING);//enables our lighting
         glEnable(GL_LIGHT0);//enables light0
-    }
-    
-    private void initLightArrays() {
-        lightPosition= BufferUtils.createFloatBuffer(4);
-        lightPosition.put(0.0f).put(0.0f).put(0.0f).put(1.0f).flip();
-        whiteLight= BufferUtils.createFloatBuffer(4);
-        whiteLight.put(1.0f).put(1.0f).put(1.0f).put(0.0f).flip();
     }
     
     //method: processInput
