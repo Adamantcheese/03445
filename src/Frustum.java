@@ -29,7 +29,7 @@ public class Frustum
     public static final int B = 1;
     public static final int C = 2;
     public static final int D = 3;
-
+    
     float[][] frustum = new float[6][4];
 
     FloatBuffer modelBuffer;
@@ -154,7 +154,6 @@ public class Frustum
 
         return true;
     }
-    
     // method: chunkInFrustum
     // purpose: Calls the cubeInFrustum method using values from the Chunk class
     public boolean chunkInFrustum(Chunk c) {
@@ -167,6 +166,8 @@ public class Frustum
     public void render(Chunk c) {
         if (chunkInFrustum(c)) {
             c.render();
+        }else{
+            System.out.println("chunk not rendered");
         }
     }
     

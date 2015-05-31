@@ -19,14 +19,13 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
 public class WindowContainer {
-    
+    public Frustum frustum = new Frustum();
     private FPCameraController camera;
-    
     private Chunk chunk0;
     private Chunk chunk1;
     private Chunk chunk2;
     private Chunk chunk3;
-    
+
     private final float MOUSE_SENSITIVITY = .2f;
     private final float MOVEMENT_SPEED = 0.75f;
     
@@ -44,11 +43,10 @@ public class WindowContainer {
             initGL();
             camera = new FPCameraController(0, 0, 0);
             
-            chunk0 = new Chunk(0, 0, 0);
-            chunk1 = new Chunk(Chunk.CHUNK_SIZE, 0, 0);
-            chunk2 = new Chunk(0, 0, Chunk.CHUNK_SIZE);
-            chunk3 = new Chunk(Chunk.CHUNK_SIZE, 0, Chunk.CHUNK_SIZE);
-            
+            chunk0 = new Chunk(0, 0, 0, frustum);
+            chunk1 = new Chunk(Chunk.CHUNK_SIZE, 0, 0, frustum);
+            chunk2 = new Chunk(0, 0, Chunk.CHUNK_SIZE, frustum);
+            chunk3 = new Chunk(Chunk.CHUNK_SIZE, 0, Chunk.CHUNK_SIZE, frustum);      
             render();
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,32 +112,46 @@ public class WindowContainer {
     //Left shift moves the camera down.
     private void processInput() {
         if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
+            frustum.calculateFrustum();
             camera.moveLeft(MOVEMENT_SPEED);
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_D)) {
             camera.moveRight(MOVEMENT_SPEED);
+            frustum.calculateFrustum();
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
             camera.moveBackward(MOVEMENT_SPEED);
+            frustum.calculateFrustum();
+
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
             camera.moveForward(MOVEMENT_SPEED);
+            frustum.calculateFrustum();
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            frustum.calculateFrustum();
             camera.moveDown(MOVEMENT_SPEED);
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+            frustum.calculateFrustum();
             camera.moveUp(MOVEMENT_SPEED);
         }
+        updateFrustum();
     }
     
+    private void updateFrustum(){
+        chunk0.setFrustum(frustum);
+        chunk1.setFrustum(frustum);
+        chunk2.setFrustum(frustum);
+        chunk3.setFrustum(frustum);
+    }
     //method: render
     //purpose: Renders the objects that were specified when this WindowContainer was made.
     //If the user presses "Esc" or closes the window, the display is destroyed.
     private void render() {
-        Frustum frustum = new Frustum();
         while(!Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
             int dx = Mouse.getDX(), dy = Mouse.getDY();
+           frustum.calculateFrustum();
             camera.incYaw(dx * MOUSE_SENSITIVITY);
             camera.incPitch(dy * MOUSE_SENSITIVITY);
             if (dx != 0 || dy != 0) {

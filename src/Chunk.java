@@ -18,6 +18,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
 public class Chunk {
+    Frustum frustum;
     static final int CHUNK_SIZE = 30;
     static final int MIN_HEIGHT = 5;
     static final int BLOCK_LENGTH = 2;
@@ -36,7 +37,9 @@ public class Chunk {
     
     private Random rand;
     private SimplexNoise noise;
-
+    public void setFrustum(Frustum frust){
+        frustum = frust;
+    }
     //method: render
     //purpose: Renders this chunk using GL Buffers.
     public void render() {
@@ -70,12 +73,18 @@ public class Chunk {
                 int maxHeight = (startY + (int) (100 * noise.getNoise(i, k)));
                 
                 for (float y = 0; y < MIN_HEIGHT; y++) {
-                    vertexPositionData.put(createCube(
+                    //if(frustum.cubeInFrustum(startX + x*BLOCK_LENGTH, y*BLOCK_LENGTH - CHUNK_SIZE, startZ + z*BLOCK_LENGTH, 4)){
+                        vertexPositionData.put(createCube(
                             (float) (startX + x*BLOCK_LENGTH), 
                             (float) (y*BLOCK_LENGTH - CHUNK_SIZE), 
                             (float) (startZ + z*BLOCK_LENGTH)));
+                    //we need to check here if it needs to be culled
                     vertexColorData.put(createCubeVertexCol());
                     vertexTextureData.put(createTexCube((float) 0, (float) 0, blocks[(int) x][(int) y][(int) z]));
+                    //}else{
+                        //System.out.println("cube not rendered");
+                    //}
+
                 }
                 
                 for(float y = MIN_HEIGHT; y <= maxHeight + MIN_HEIGHT; y++) {
@@ -408,7 +417,8 @@ public class Chunk {
     
     //method: constructor
     //purpose: Creates this chunk based on the given starting location, and generates all render buffers for it.
-    public Chunk(int startX, int startY, int startZ) {
+    public Chunk(int startX, int startY, int startZ, Frustum frust) {
+        frustum = frust;
         this.startX = startX;
         this.startY = startY;
         this.startZ = startZ;
