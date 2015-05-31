@@ -106,7 +106,7 @@ public class Chunk {
     }
     
     //method: createTexCube
-    //purpose: Attahes the correct textures to blocks based on their blocktype and location.
+    //purpose: Attaches the correct textures to blocks based on their blocktype and location.
     public static float[] createTexCube(float x, float y, Block b) {
         float offset = (256f / 4) / 256;
         switch (b.getID()) {
@@ -399,6 +399,12 @@ public class Chunk {
             x + offset, y - offset, z
         };
     }
+    
+    public int getStartX() {return startX;}
+    public int getStartY() {return startY;}
+    public int getStartZ() {return startZ;}
+    public int getChunkSize() {return CHUNK_SIZE;}
+    public int getBlockLength() {return BLOCK_LENGTH;}
     
     //method: constructor
     //purpose: Creates this chunk based on the given starting location, and generates all render buffers for it.

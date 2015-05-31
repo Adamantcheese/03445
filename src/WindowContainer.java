@@ -14,7 +14,6 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
 import org.lwjgl.util.glu.GLU;
 import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
@@ -138,20 +137,25 @@ public class WindowContainer {
     //purpose: Renders the objects that were specified when this WindowContainer was made.
     //If the user presses "Esc" or closes the window, the display is destroyed.
     private void render() {
+        Frustum frustum = new Frustum();
         while(!Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-            camera.incYaw(Mouse.getDX() * MOUSE_SENSITIVITY);
-            camera.incPitch(Mouse.getDY() * MOUSE_SENSITIVITY);
+            int dx = Mouse.getDX(), dy = Mouse.getDY();
+            camera.incYaw(dx * MOUSE_SENSITIVITY);
+            camera.incPitch(dy * MOUSE_SENSITIVITY);
+            if (dx != 0 || dy != 0) {
+                frustum.calculateFrustum();
+            }
             
             processInput();
             try {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 glLoadIdentity();
                 camera.lookThrough();
-                
-                chunk0.render();
-                chunk1.render();
-                chunk2.render();
-                chunk3.render();
+          
+                frustum.render(chunk0);
+                frustum.render(chunk1);
+                frustum.render(chunk2);
+                frustum.render(chunk3);
                 
                 Display.update();
                 Display.sync(60);

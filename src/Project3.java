@@ -1,5 +1,5 @@
 /***************************************************************
-* file: Project1.java
+* file: Project3.java
 * author: Jacob Buchowiecki
 * class: CS 445 – Computer Graphics
 *
