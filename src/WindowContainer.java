@@ -144,10 +144,10 @@ public class WindowContainer {
         chunk1.setFrustum(frustum);
         chunk2.setFrustum(frustum);
         chunk3.setFrustum(frustum);
-        chunk0.rebuildMesh();
-        chunk1.rebuildMesh();
-        chunk2.rebuildMesh();
-        chunk3.rebuildMesh();
+        //chunk0.rebuildMesh();
+        //chunk1.rebuildMesh();
+        //chunk2.rebuildMesh();
+        //chunk3.rebuildMesh();
         
         //get float buffers
         FloatBuffer fb0 = chunk0.getVertexBuffer();

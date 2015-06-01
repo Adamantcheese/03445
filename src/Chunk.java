@@ -81,10 +81,10 @@ public class Chunk {
                     ///we need to check here if it needs to be culled
                     vertexColorData.put(createCubeVertexCol());
                     vertexTextureData.put(createTexCube((float) 0, (float) 0, blocks[(int) x][(int) y][(int) z]));
-                    if(!frustum.cubeInFrustum(startX + x*BLOCK_LENGTH, y*BLOCK_LENGTH - CHUNK_SIZE, startZ + z*BLOCK_LENGTH, 2)){
-                        System.out.println("block inactive");
-                        blocks[(int)x][(int)y][(int)z].setActive(false);
-                    }
+                    //if(!frustum.cubeInFrustum(startX + x*BLOCK_LENGTH, y*BLOCK_LENGTH - CHUNK_SIZE, startZ + z*BLOCK_LENGTH, 2)){
+                        //System.out.println("block inactive");
+                        //blocks[(int)x][(int)y][(int)z].setActive(false);
+                    //}
 
                 }
                 
@@ -95,11 +95,11 @@ public class Chunk {
                             (float) (startZ + z*BLOCK_LENGTH)));
                     vertexColorData.put(createCubeVertexCol());                   
                     vertexTextureData.put(createTexCube((float) 0, (float) 0, blocks[(int) x][(int) y][(int) z]));
-                    if(!frustum.cubeInFrustum(startX + x*BLOCK_LENGTH, y*BLOCK_LENGTH - CHUNK_SIZE, startZ + z*BLOCK_LENGTH, 2)){
+                    //if(!frustum.cubeInFrustum(startX + x*BLOCK_LENGTH, y*BLOCK_LENGTH - CHUNK_SIZE, startZ + z*BLOCK_LENGTH, 2)){
 
-                        System.out.println("block inactive " + x + " " + y + " " + z);
-                        blocks[(int)x][(int)y][(int)z].setActive(false);
-                    }
+                        //System.out.println("block inactive " + x + " " + y + " " + z);
+                        //blocks[(int)x][(int)y][(int)z].setActive(false);
+                    //}
                 }
             }
         }
