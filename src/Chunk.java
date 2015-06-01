@@ -19,6 +19,7 @@ import org.newdawn.slick.util.ResourceLoader;
 
 public class Chunk {
     Frustum frustum;
+    FloatBuffer vertexPositionData;
     static final int CHUNK_SIZE = 30;
     static final int MIN_HEIGHT = 5;
     static final int BLOCK_LENGTH = 2;
@@ -57,12 +58,12 @@ public class Chunk {
     
     //method: rebuildMesh
     //purpose: Constructs the GL Buffers used to render this chunk.
-    private void rebuildMesh() {
+    public void rebuildMesh() {
         VBOVertexHandle = glGenBuffers();
         VBOColorHandle = glGenBuffers();
         VBOTextureHandle = glGenBuffers();
         
-        FloatBuffer vertexPositionData = BufferUtils.createFloatBuffer(CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE*72);
+        vertexPositionData = BufferUtils.createFloatBuffer(CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE*72);
         FloatBuffer vertexColorData = BufferUtils.createFloatBuffer(CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE*72);
         FloatBuffer vertexTextureData = BufferUtils.createFloatBuffer(CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE*72);
         
@@ -73,17 +74,17 @@ public class Chunk {
                 int maxHeight = (startY + (int) (100 * noise.getNoise(i, k)));
                 
                 for (float y = 0; y < MIN_HEIGHT; y++) {
-                    //if(frustum.cubeInFrustum(startX + x*BLOCK_LENGTH, y*BLOCK_LENGTH - CHUNK_SIZE, startZ + z*BLOCK_LENGTH, 4)){
                         vertexPositionData.put(createCube(
                             (float) (startX + x*BLOCK_LENGTH), 
                             (float) (y*BLOCK_LENGTH - CHUNK_SIZE), 
                             (float) (startZ + z*BLOCK_LENGTH)));
-                    //we need to check here if it needs to be culled
+                    ///we need to check here if it needs to be culled
                     vertexColorData.put(createCubeVertexCol());
                     vertexTextureData.put(createTexCube((float) 0, (float) 0, blocks[(int) x][(int) y][(int) z]));
-                    //}else{
-                        //System.out.println("cube not rendered");
-                    //}
+                    if(!frustum.cubeInFrustum(startX + x*BLOCK_LENGTH, y*BLOCK_LENGTH - CHUNK_SIZE, startZ + z*BLOCK_LENGTH, 2)){
+                        System.out.println("block inactive");
+                        blocks[(int)x][(int)y][(int)z].setActive(false);
+                    }
 
                 }
                 
@@ -94,6 +95,11 @@ public class Chunk {
                             (float) (startZ + z*BLOCK_LENGTH)));
                     vertexColorData.put(createCubeVertexCol());                   
                     vertexTextureData.put(createTexCube((float) 0, (float) 0, blocks[(int) x][(int) y][(int) z]));
+                    if(!frustum.cubeInFrustum(startX + x*BLOCK_LENGTH, y*BLOCK_LENGTH - CHUNK_SIZE, startZ + z*BLOCK_LENGTH, 2)){
+
+                        System.out.println("block inactive " + x + " " + y + " " + z);
+                        blocks[(int)x][(int)y][(int)z].setActive(false);
+                    }
                 }
             }
         }
@@ -359,7 +365,9 @@ public class Chunk {
         }
 
     }
-    
+    public FloatBuffer getVertexBuffer(){
+        return vertexPositionData;
+    }
     //method: createCubeVertexCol
     //purpose: Creates an array of cube colors for the given column in the chunk.
     private float[] createCubeVertexCol() {

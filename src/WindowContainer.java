@@ -144,6 +144,21 @@ public class WindowContainer {
         chunk1.setFrustum(frustum);
         chunk2.setFrustum(frustum);
         chunk3.setFrustum(frustum);
+        chunk0.rebuildMesh();
+        chunk1.rebuildMesh();
+        chunk2.rebuildMesh();
+        chunk3.rebuildMesh();
+        
+        //get float buffers
+        FloatBuffer fb0 = chunk0.getVertexBuffer();
+        FloatBuffer fb1 = chunk1.getVertexBuffer();
+        FloatBuffer fb2 = chunk2.getVertexBuffer();
+        FloatBuffer fb3 = chunk3.getVertexBuffer();
+        //reformulate the buffers
+        
+        
+        //loop through buffers, only rebuild what we need to
+        //from within this method, check the frustum using our buffers
     }
     //method: render
     //purpose: Renders the objects that were specified when this WindowContainer was made.
